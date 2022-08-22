@@ -1,0 +1,329 @@
+#map{
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+}
+.mousePos{
+    position: fixed;
+    top: auto;
+    right: auto;
+    bottom: 5px;
+    left: 60%;
+    transform: translateX(-50%);
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 100px;
+    padding: 5px;
+    transition: 1s;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 9px;
+    background-color: #c4b35488;
+    color: black;
+    font-style: italic;
+    font-weight: bold;
+}
+table.hide1 .col1 { display: none; }
+table td:nth-child(8) { display: none; }
+.ol-popup {
+    position: absolute;
+    background-color: #838d8a;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #cccccc;
+    bottom: 12px;
+    left: -50px;
+    min-width: 150px;
+    color: #d8c3a5;
+  }
+.ol-popup:hover{
+  color: #e85a4f;
+  background-color: #EAE7DC;
+  box-shadow: 3px 3px 3px 3px rgba(0,0,0,0.2);
+  transition: 0.6s all ease-in-out;
+  -webkit-transition: 0.6s all ease-in-out;
+}
+  .ol-popup:after, .ol-popup:before {
+    top: 100%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+  }
+  /* .ol-popup:after {
+    border-top-color: red;
+    border-width: 10px;
+    left: 48px;
+    margin-left: -10px;
+    top: 30px;
+  } */
+  .ol-popup:before {
+    border-top-color: #EAE7DC;
+    border-width: 11px;
+    left: 48px;
+    margin-left: -11px;
+  }
+  .ol-popup-closer {
+    text-decoration: none;
+    position: absolute;
+    top: 2px;
+    right: 8px;
+  }
+  .ol-popup-closer:after {
+    content: "✖";
+
+  }
+
+
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    border-radius: 5px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #fff; 
+    border-radius: 5px;
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888; 
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+  }
+
+.myButton{
+  background-color: rgba(0,0,0,0);
+  border: none;
+  box-shadow: #555;
+  background-color: #d8d3c0;
+  border-radius: 50%;
+  padding: 3px;
+  margin: 3px;
+}
+.myButton:hover{
+  box-shadow:  0 1px 6px rgba(0,0,0,0.7);
+}
+.myButton.clicked{
+  background-color: #e98074;
+}
+
+ /* start : Measure styling */
+
+ .ol-tooltip {
+  position: relative;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  color: white;
+  padding: 4px 8px;
+  opacity: 0.7;
+  white-space: nowrap;
+  font-size: 12px;
+}
+.ol-tooltip-measure {
+  opacity: 1;
+  font-weight: bold;
+}
+.ol-tooltip-static {
+  background-color: #d8d3c0;
+  color: #838d8a;
+  border: 1px solid white;
+  font-weight: bold;
+}
+.ol-tooltip-measure:before,
+.ol-tooltip-static:before {
+  border-top: 6px solid rgba(0, 0, 0, 0.5);
+  border-right: 6px solid transparent;
+  border-left: 6px solid transparent;
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  margin-left: -7px;
+  left: 50%;
+}
+.ol-tooltip-static:before {
+  border-top-color: #5d6b67;
+}
+
+.homeButtonDiv{
+  width: 20%;
+}
+
+.featureInfoDiv{
+  width: 20%;
+}
+.fsButtonDiv{
+  width: 20%;
+}
+.lengthButtonDiv{
+  width: 20%;
+}
+.areaButtonDiv{
+  width: 20%;
+}
+.ziButtonDiv{
+  width: 20%;
+}
+.zoButtonDiv{
+  width: 20%;
+}
+.myButtonDiv{
+  width: 5%;
+}
+/* end : Measure styling */
+.attQryRun:hover{
+  background-color: #6de948;
+  transition-delay: 0.2s;
+
+}
+
+
+.attQueryDiv {
+  position: absolute;
+  display: none;
+  margin: 70px auto auto 45px;
+  /* padding: 10px; */
+  width: 250px;
+  /* height: 250px; */
+  background-color: rgba(255, 255, 255, 0.9);
+  font-family: inherit;
+  font-size: 1em;
+  line-height: 1.45;
+  border-radius: 2px;
+  border: 1px solid #d1d1d1;
+  box-shadow: 0px 0px 15px rgba(252, 213, 213, 0.5);
+  /* z-index: 4; */
+  /* overflow: scroll; */
+  position: absolute; 
+  bottom: 0px; 
+  right:0px; 
+  background-color: #d8d3c0;
+  color: #e98074;
+  transition: visibility 0s, opacity 0.5s linear;
+}
+
+#headerDiv{
+  background-color: #838d8a;
+  height: 35px;
+  color: #e98074;
+}
+
+#headerDiv label {
+  color: #24201f;
+}
+
+.attQueryDiv select {
+  width: 225px;
+  height: 35px;
+  border: 1px solid lightgrey;
+  border-radius: 3px;
+  margin: 0px auto 0px 10px;
+}
+
+.attQueryDiv input {
+  width: 225px;
+  height: 35px;
+  border: 1px solid lightgrey;
+  border-radius: 3px;
+  margin: 0px auto 0px 10px;
+}
+
+.attQueryDiv label {
+  color: grey;
+  margin: 10px 10px 0px 10px;
+}
+
+.attQueryDiv label:nth-child(1) {
+  margin: 10px;
+  font-weight: bold;
+ }
+
+.attQryRun {
+  color: white;
+  background-color: #5d6b67;
+  border-radius: 3px;
+  border: 1px solid #5d6b67;
+  height: 35px;
+  width: 50px;
+  margin: 10px;
+  -webkit-transition: opacity 0.5s ease-in-out;
+  -moz-transition: opacity 0.5s ease-in-out;
+  -ms-transition: opacity 0.5s ease-in-out;
+  -o-transition: opacity 0.5s ease-in-out;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.attListDiv {
+  position: absolute;
+  bottom: 200px;
+  right: 0px;
+  display: none;
+  margin: 350px auto auto 350px;
+  /* padding: 10px; */
+  width: 250px;
+  height: 35px;
+  max-width: 750px;
+  /* height: auto; */
+  /* max-height: 250px; */
+  height: 250px;
+  background-color: #d8d3c0;
+  font-family: inherit;
+  font-size: 1em;
+  line-height: 1.45;
+  border-radius: 2px;
+  border: 1px solid #d1d1d1;
+  box-shadow: 2px 3px 2px rgba(0, 0, 0, 0.5);
+  /* z-index: 5; */
+  overflow: scroll;
+}
+
+#attQryTable {
+  padding: 0;
+  border-collapse: collapse;
+}
+
+#attQryTable, td, th {
+  padding: 0px 5px 0px 5px;
+  border: 1px solid black;
+  background-color: #d8d3c0;
+}
+
+#attQryTable th {
+  color: #24201f;
+  background-color: #838d8a;;
+  position: sticky;
+  top: 0;
+  font-style: normal;
+  padding: 5px 10px 5px 10px;
+}
+
+#attQryTable tr:hover
+/* {font-weight: bolder; background-color: rgb(225, 225, 225);} */
+{background-color: lightgrey;}
+
+#legend{
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  
+}
+
+.legendIMG{
+  width: 145px;
+  height: auto;
+  margin: 0px;
+  padding: 0px;
+  box-shadow: 2px 3px 2px rgba(0, 0, 0, 0.5);
+  border: solid #d8d3c0;
+}
