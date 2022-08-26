@@ -60,6 +60,16 @@ var KK = new ol.layer.Tile({
     })
 });
 
+var Data = new ol.layer.Tile({
+    title: "Data",
+    source: new ol.source.TileWMS({
+        url:'http://localhost:8080/geoserver/Practice/wms',
+        params:{'LAYERS':'Practice:interndata', 'TILED':true},
+        serverType: 'geoserver',
+        visible: true
+    })
+});
+
 var layerSwitch = new ol.control.LayerSwitcher({
     activationMode: 'click',
     startActive: false,
@@ -77,7 +87,7 @@ map.addLayer(baseGroup);
 var overlayGroup = new ol.layer.Group({
     title:"Overlays",
     fold: true,
-    layers:[PAKADM, KK]
+    layers:[PAKADM, KK, Data]
 });
 map.addLayer(overlayGroup)
 
@@ -87,6 +97,9 @@ var mousePosition = new ol.control.MousePosition({
     coordinateFormat: function(coordinate){return ol.coordinate.format(coordinate, '{y} , {x}', 6);}
 });
 map.addControl(mousePosition);
+
+
+
 
 var scaleControl = new ol.control.ScaleLine(
     {
@@ -186,13 +199,29 @@ var featureInfoFlag = false;
 featureInfoButton.addEventListener("click", () => {
     featureInfoButton.classList.toggle('clicked');
     featureInfoFlag = !featureInfoFlag;
-    console.log(featureInfoFlag, "green")
+    // console.log(featureInfoFlag, "green")
 })
 
 map.addControl(featureInfoControl);
 
+var overlayControl = new ol.control.Overlay({
+    className: "slide-left menu",
+    hideOnClick: true
+  });
+map.addControl(overlayControl);var overlayControl = new ol.control.Overlay({
+  className: "slide-left menu",
+  hideOnClick: true
+});
+map.addControl(overlayControl);
+
 map.on('singleclick', function (evt) {
-    console.log(featureInfoFlag);
+    const coordinate = evt.coordinate;
+    const hdms = ol.coordinate.toStringHDMS(ol.proj.toLonLat(coordinate));  
+    // overlayControl.show('<p>You clicked this point:</p><code>' + hdms + '</code>');
+  });
+
+map.on('pointermove', function (evt) {
+    // console.log(featureInfoFlag);
     if (featureInfoFlag) {
         // console.log("red");
         content.innerHTML = '';
@@ -205,11 +234,15 @@ map.on('singleclick', function (evt) {
         if (url) {
             // console.log("blue");
             $.getJSON(url, function (data) {
+                console.log(evt.coordinate)
                 var feature = data.features[0];
                 var props = feature.properties;
-                content.innerHTML = "<h3> Province : </h3> <p>" + props.name_1.toUpperCase() + "</p> <br> <h3> District : </h3> <p>" +
-                    props.name_2.toUpperCase() + "</p>";
-                popup.setPosition(evt.coordinate);
+                // content.innerHTML = "<h3> Province : </h3> <p>" + props.name_1.toUpperCase() + "</p> <br> <h3> District : </h3> <p>" +
+                //     props.name_2.toUpperCase() + "</p>";
+                console.log(data.features);
+                    overlayControl.show("<h3> Province : </h3> <p>" + props.name_1.toUpperCase() + "</p> <br> <br> <h3> Divisions : </h3> <p>" +
+                        props.name_2.toUpperCase() + "</p>");
+                // popup.setPosition([0,0]);
             })
         } else {
             popup.setPosition(undefined);
@@ -375,17 +408,8 @@ map.addControl(areaControl);
  
          if (sketch) {
              var geom = sketch.getGeometry();
-             // if (geom instanceof ol.geom.Polygon) {
-             //   helpMsg = continuePolygonMsg;
-             // } else if (geom instanceof ol.geom.LineString) {
-             //   helpMsg = continueLineMsg;
-             // }
          }
  
-         //helpTooltipElement.innerHTML = helpMsg;
-         //helpTooltip.setPosition(evt.coordinate);
- 
-         //helpTooltipElement.classList.remove('hidden');
      };
  
      map.on('pointermove', pointerMoveHandler);
@@ -398,7 +422,6 @@ map.addControl(areaControl);
          /** @type {import("../src/ol/coordinate.js").Coordinate|undefined} */
          var tooltipCoord = evt.coordinate;
  
-         //listener = sketch.getGeometry().on('change', function (evt) {
          sketch.getGeometry().on('change', function (evt) {
              var geom = evt.target;
              var output;
@@ -457,10 +480,6 @@ map.addControl(areaControl);
  }
  
  
-// map.getViewport().addEventListener('mouseout', function () {
-//     helpTooltipElement.classList.add('hidden');
-// });
-
 /**
 * The measure tooltip element.
 * @type {HTMLElement}
@@ -612,9 +631,46 @@ map.addControl(zoControl);
 
 
 
+var select1 = document.getElementById("selectCantonment");
+const cantonment = ["Malir", "Multan", "Bahawalpur", "Rawalpindi", "Chaklala"];
+
+for(var i = 0; i < cantonment.length; i++) {
+    var opt = cantonment[i];
+    var el1 = document.createElement("option");
+    el1.textContent = opt;
+    el1.value = opt;
+    select1.appendChild(el1);
+}
+var e = document.getElementById("selectCantonment");
+var value = e.options[e.selectedIndex].value;
 
 
+var select2 = document.getElementById("selectLandCategory");
+const LandCategory = ["A1","A2","B1","B2","B3","B4","CG"];
 
+for(var i = 0; i < LandCategory.length; i++) {
+    var opt = LandCategory[i];
+    var el2 = document.createElement("option");
+    el2.textContent = opt;
+    el2.value = opt;
+    select2.appendChild(el2);
+}
+var e1 = document.getElementById("selectLandCategory");
+var value = e1.options[e1.selectedIndex].value;
+
+
+var select3 = document.getElementById("selectSurveyNumber");
+const SurveyNumber = [1,2,3,4,5,6,7,8,9,10];
+
+for(var i = 0; i < SurveyNumber.length; i++) {
+    var opt = SurveyNumber[i];
+    var el3 = document.createElement("option");
+    el3.textContent = opt;
+    el3.value = opt;
+    select3.appendChild(el3); 
+}
+var e2 = document.getElementById("selectSurveyNumber");
+var value = e2.options[e2.selectedIndex].value;
 
 
 
@@ -685,7 +741,7 @@ function addMapLayerList() {
             url: "http://localhost:8080/geoserver/wfs?request=getCapabilities",
             dataType: "xml",
             success: function (xml) {
-                var select = $('#selectLayer');
+                var select = $('#selectCantonment');
                 select.append("<option class='ddindent' value=''></option>");
                 $(xml).find('FeatureType').each(function () {
                     $(this).find('Name').each(function () {
@@ -700,64 +756,20 @@ function addMapLayerList() {
 };
 
 $(function () {
-    document.getElementById("selectLayer").onchange = function () {
-        var select = document.getElementById("selectAttribute");
-        while (select.options.length > 0) {
-            select.remove(0);
-        }
+    document.getElementById("selectCantonment").onchange = function () {
+        // var select = document.getElementById("selectAttribute");
+        // while (select.options.length > 0) {
+        //     select.remove(0);
+        // }
         var value_layer = $(this).val();
         $(document).ready(function () {
             $.ajax({
                 type: "GET",
                 url: "http://localhost:8080/geoserver/Practice/wfs?service=WFS&request=DescribeFeatureType&version=1.1.0&typeName=" + value_layer,
                 dataType: "xml",
-                // success: function (xml) {
-
-                //     var select = $('#selectAttribute');
-                //     //var title = $(xml).find('xsd\\:complexType').attr('name');
-                //     //	alert(title);
-                //     select.append("<option class='ddindent' value=''></option>");
-                //     $(xml).find('xsd\\:sequence').each(function () {
-
-                //         $(this).find('xsd\\:element').each(function () {
-                //             var value = $(this).attr('name');
-                //             //alert(value);
-                //             var type = $(this).attr('type');
-                //             //alert(type);
-                //             if (value != 'geom' && value != 'the_geom') {
-                //                 select.append("<option class='ddindent' value='" + type + "'>" + value + "</option>");
-                //             }
-                //         });
-
-                //     });
-                // }
             });
         });
     }
-    // document.getElementById("selectAttribute").onchange = function () {
-        // var operator = document.getElementById("selectOperator");
-        // while (operator.options.length > 0) {
-        //     operator.remove(0);
-        // }
-
-        // var value_type = $(this).val();
-        // // alert(value_type);
-        // var value_attribute = $('#selectAttribute option:selected').text();
-        // operator.options[0] = new Option('Select operator', "");
-
-        // if (value_type == 'xsd:short' || value_type == 'xsd:int' || value_type == 'xsd:double') {
-        //     var operator1 = document.getElementById("selectOperator");
-        //     operator1.options[1] = new Option('Greater than', '>');
-        //     operator1.options[2] = new Option('Less than', '<');
-        //     operator1.options[3] = new Option('Equal to', '=');
-        // }
-        // else if (value_type == 'xsd:string') {
-        //     var operator1 = document.getElementById("selectOperator");
-        //     operator1.options[1] = new Option('Like', 'Like');
-        //     operator1.options[2] = new Option('Equal to', '=');
-        // }
-    //}
-
     document.getElementById('attQryRun').onclick = function () {
         map.set("isLoading", 'YES');
 
@@ -766,33 +778,28 @@ $(function () {
             map.removeLayer(featureOverlay);
         }
 
-        var layer = document.getElementById("selectLayer");
+        var layer = document.getElementById("selectCantonment");
         var attribute = document.getElementById("selectAttribute");
         var operator = document.getElementById("selectOperator");
         var txt = document.getElementById("enterValue");
 
         if (layer.options.selectedIndex == 0) {
-            alert("Select Layer");
+            alert("Select Cantonement");
         }
-        // } else if (attribute.options.selectedIndex == -1) {
-        //     alert("Select Attribute");
-        // } else if (operator.options.selectedIndex <= 0) {
-        //     alert("Select Operator");
-        // } else if (txt.value.length <= 0) {
-        //     alert("Enter Value");
+        else if (e1.options.selectedIndex == 0) {
+            alert("Select Land Category");
+        }
+        else if (e2.options.selectedIndex == 0) {
+            alert("Select Survey Number");
+        }
          else {
-            var value_layer = "Practice:pakistan_with_kashmir"}
-            console.log(typeof(value_layer));
-        //     var value_attribute = attribute.options[attribute.selectedIndex].text;
-        //     var value_operator = operator.options[operator.selectedIndex].value;
-        //     var value_txt = txt.value;
-        //     if (value_operator == 'Like') {
-        //         value_txt = "%25" + value_txt + "%25";
-        //     }
-        //     else {
-        //         value_txt = value_txt;
-        //     }
-            var url = "http://localhost:8080/geoserver/Pakadm/wfs?service=WfS&version=1.1.0&request=GetFeature&typeName=" + "Pakadm:pak_adm2&" + "&CQL_FILTER=name_1='Punjab' AND name_2='Multan'" + "&outputFormat=application/json"
+            var value_layer = "Practice:pakistan_with_kashmir"
+            var text = e.options[e.selectedIndex].text; 
+            var text1 = e1.options[e1.selectedIndex].text; 
+            var text2 = e2.options[e2.selectedIndex].text; 
+            console.log(typeof(text));
+        }
+            var url = "http://localhost:8080/geoserver/Practice/wfs?service=WfS&version=1.1.0&request=GetFeature&typeName=" + "Practice:interndata&" + "CQL_FILTER=land_categ='" + text1 + "'AND cantonment='" + text + "'AND survey_num='"+ text2 +"'&outputFormat=application/json"
             // console.log(url);
             newaddGeoJsonToMap(url);
             newpopulateQueryTable(url);
@@ -800,6 +807,8 @@ $(function () {
             map.set("isLoading", 'NO');
     }
 });
+
+
 
 function newaddGeoJsonToMap(url) {
 
@@ -849,6 +858,10 @@ function newpopulateQueryTable(url) {
         }
     }
     $.getJSON(url, function (data) {
+        if(data.features.length == 0){
+            alert("No Data Exist");
+        }
+        else{
         var col = [];
         for (var i = 0; i < data.features.length; i++) {
 
@@ -869,7 +882,7 @@ function newpopulateQueryTable(url) {
 
         var tr = table.insertRow(-1);                   // TABLE ROW.
         var z =0;
-        for (var i = 0; i < col.length; i++) {
+        for (var i = 3; i < col.length; i++) {
             var th = document.createElement("th");      // TABLE HEADER.
             th.innerHTML = col[i];
             tr.appendChild(th);
@@ -883,7 +896,7 @@ function newpopulateQueryTable(url) {
         for (var i = 0; i < data.features.length; i++) {
             tr = table.insertRow(-1);
             // console.log(data.feature.length);
-            for (var j = 0; j < col.length; j++) {
+            for (var j = 3; j < col.length; j++) {
                 var tabCell = tr.insertCell(-1);
                 if (j == z) { tabCell.innerHTML = data.features[i]['id']; }
                 else {
@@ -903,6 +916,7 @@ function newpopulateQueryTable(url) {
         tabDiv.appendChild(table);
 
         document.getElementById("attListDiv").style.display = "block";
+        }
     });
 
 };
@@ -945,7 +959,7 @@ function newaddRowHandlers() {
     }
     for (i = 0; i < rows.length; i++) {
         rows[i].onclick = function () {
-            console.log(rows[i]);
+            // console.log(rows[i]);
             return function () {
                 featureOverlay.getSource().clear();
 
@@ -1035,59 +1049,19 @@ function dragElement(elmnt) {
 
 
 
+function myFunction() {
+    var x = document.getElementById("legend");
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+  }
 
 
 
 
 
 
-
-
-
-
-//JUNK CODE
-
-
-
-
-
-
-// map.on('singleclick', event => {
-//     // get the feature you clicked
-//     const feature = map.forEachFeatureAtPixel(event.pixel, (feature) => {
-//      return feature
-//      console.log(feature)
-//     })
-//     if(feature instanceof ol.Feature){
-//       // Fit the feature geometry or extent based on the given map
-//       map.getView().fit(feature.getGeometry())
-//       // map.getView().fit(feature.getGeometry().getExtent())
-//     }
-//    })
-
-
-// var myLayer = new ol.layer.Tile({
-//     title: "New Layer",
-//     source: new ol.source.TileWMS({
-//         url:'http://localhost:8080/geoserver/Practice/wms',
-//         params:{'LAYERS':'Practice:world-country-boundaries', 'TILED':true},
-//         serverType: 'geoserver',
-//         visible: true
-//     })
-// });
-// map.addLayer(myLayer);
-
-
-
-// var Karachi = new ol.layer.Tile({
-//     title: "New Layer",
-//     source: new ol.source.TileWMS({
-//         url:'http://localhost:8080/geoserver/Space/wms',
-//         params:{'LAYERS':'Space:geotools_coverage', 'TILED':true},
-//         serverType: 'geoserver',
-//         visible: true
-//     })
-// });
-// map.addLayer(Karachi);
 
 
