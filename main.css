@@ -210,7 +210,7 @@ table td:nth-child(8) { display: none; }
   /* overflow: scroll; */
   position: absolute; 
   bottom: 0px; 
-  right:0px; 
+  left:70px; 
   background-color: #d8d3c0;
   color: #e98074;
   transition: visibility 0s, opacity 0.5s linear;
@@ -269,10 +269,9 @@ table td:nth-child(8) { display: none; }
 
 .attListDiv {
   position: absolute;
-  bottom: 0px;
-  right: 0px;
+  bottom: 305px;
+  left: 115px;
   display: none;
-  margin: 350px auto auto 350px;
   /* padding: 10px; */
   width: 250px;
   height: 35px;
@@ -318,19 +317,20 @@ table td:nth-child(8) { display: none; }
 #legend{
   position: absolute;
   bottom: 0px;
-  left: 80px;
+  right: 10px;
   display: none;
   
 }
 #legend-button{
   position: absolute;
-  bottom: 175px;
+  bottom: 230px;
   left: 0px;
+  margin-top: 0px;
   
 }
 
 .legendIMG{
-  width: 145px;
+  width:  130px;
   height: auto;
   margin: 0px;
   padding: 0px;
