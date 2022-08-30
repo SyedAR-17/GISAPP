@@ -1,14 +1,12 @@
 .layer-switcher {
   position: absolute;
-  top: 0;
+  top: 50px;
   right: 0.5em;
   text-align: left;
 }
 
-
-
 .layer-switcher .panel {
-  margin: 0;
+  margin-right: 50px;
   border: 4px solid #eee;
   border-radius: 4px;
   background-color: white;
@@ -16,7 +14,8 @@
   max-height: inherit;
   height: 100%;
   box-sizing: border-box;
-  overflow-y: auto;
+  overflow-y: scroll;
+
   color: black;
   font: 'Roboto', sans-serif;
   font-weight: bold;
@@ -60,7 +59,7 @@
 }
 
 .layer-switcher.shown button {
-  display: none;
+  display: block;
 }
 
 .layer-switcher.shown.layer-switcher-activation-mode-click > button {

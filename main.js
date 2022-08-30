@@ -1,5 +1,28 @@
+$( function() {
+    $( "#accordion" ).accordion();
+  } );
+
+
+var layerFlag = false; 
+var LandCategoryLayerflag = false;
 // import province  from "./database.js";
 // console.log(province);
+
+// function myFunc(){
+//     console.log("HELLO");
+// }
+
+// var EleButton = document.getElementById("layer1").addEventListener("change", validate);
+// var EleButton = document.getElementById("layer2").addEventListener("change", validate1);
+// var EleButton = document.getElementById("layer3").addEventListener("change", validate2);
+// var EleButton = document.getElementById("layer4").addEventListener("change", validate3);
+
+
+$(document).ready(function(){
+    $("h6").click(function(){
+      $(this).hide();
+    });
+  });
 
 var mapView = new ol.View({
     center: ol.proj.fromLonLat([69.3451,30.3753]),
@@ -11,6 +34,7 @@ var map = new ol.Map({
     target: 'map',
     view: mapView,
     controls:[]
+    //define function,
 });
 var i =0;
 map.on('singleclick', function (vt) {
@@ -31,13 +55,15 @@ var WB = new ol.layer.Tile({
 var RES = new ol.layer.Tile({
     title: "Residential",
     minZoom: 10,
+
     source: new ol.source.TileWMS({
         url:'http://localhost:8080/geoserver/Practice/wms',
         params:{'LAYERS':'Practice:residential', 'TILED':true},
         serverType: 'geoserver',
-        visible: true
+        visible: true,
     })
 });
+
 // map.addLayer(RES);
 var COM = new ol.layer.Tile({
     title: "Commercial",
@@ -63,7 +89,6 @@ var ENC = new ol.layer.Tile({
 // map.addLayer(ENC);
 var LIT = new ol.layer.Tile({
     title: "Litigation",
-    minZoom: 10,
     source: new ol.source.TileWMS({
         url:'http://localhost:8080/geoserver/Practice/wms',
         params:{'LAYERS':'Practice:Litigation', 'TILED':true},
@@ -71,7 +96,7 @@ var LIT = new ol.layer.Tile({
         visible: true
     })
 });
-// map.addLayer(LIT);
+//map.addLayer(LIT);
 
 var PAK = new ol.layer.Tile({
     title: "Pakistan",
@@ -116,6 +141,8 @@ var KK = new ol.layer.Tile({
     })
 });
 
+
+
 var Waterways = new ol.layer.Tile({
     title: "Rivers",
     source: new ol.source.TileWMS({
@@ -130,22 +157,92 @@ var layerSwitch = new ol.control.LayerSwitcher({
     activationMode: 'click',
     startActive: false,
     groupSelectStyle: 'children'
+    
 });
 map.addControl(layerSwitch);
+
+
+function validate(){
+    if (document.getElementById('layer1').checked) {
+        map.addLayer(LIT);
+        var url = "http://localhost:8080/geoserver/Practice/wfs?service=WfS&version=1.1.0&request=GetFeature&typeName="+ "Practice:Litigation&" + "outputFormat=application/json"
+        newaddGeoJsonToMap(url);
+        newpopulateQueryTable(url);
+        setTimeout(function () { newaddRowHandlers(url); }, 300);
+        map.set("isLoading", 'NO');
+    } else {
+        removeLay(LIT)
+    }
+}
+
+function validate1(){
+    if (document.getElementById('layer2').checked) {
+        map.addLayer(ENC);
+        var url = "http://localhost:8080/geoserver/Practice/wfs?service=WfS&version=1.1.0&request=GetFeature&typeName="+ "	Practice:Encroach&" + "outputFormat=application/json"
+        newaddGeoJsonToMap(url);
+        newpopulateQueryTable(url);
+        setTimeout(function () { newaddRowHandlers(url); }, 300);
+        map.set("isLoading", 'NO');
+    } else {
+        removeLay(ENC)
+    }
+}
+
+function validate2(){
+    if (document.getElementById('layer3').checked) {
+        map.addLayer(COM);
+        var url = "http://localhost:8080/geoserver/Practice/wfs?service=WfS&version=1.1.0&request=GetFeature&typeName="+ "Practice:Commercial&" + "outputFormat=application/json"
+        newaddGeoJsonToMap(url);
+        newpopulateQueryTable(url);
+        setTimeout(function () { newaddRowHandlers(url); }, 300);
+        map.set("isLoading", 'NO');
+    } else {
+        removeLay(COM)
+    }
+}
+
+function validate3(){
+    if (document.getElementById('layer4').checked) {
+        map.addLayer(RES);
+       RES.displayInLayerSwitcher = false;
+       // map.RES.setVisibility(false);
+        var url = "http://localhost:8080/geoserver/Practice/wfs?service=WfS&version=1.1.0&request=GetFeature&typeName="+ "Practice:residential&" + "outputFormat=application/json"
+        newaddGeoJsonToMap(url);
+        newpopulateQueryTable(url);
+        setTimeout(function () { newaddRowHandlers(url); }, 300);
+        map.set("isLoading", 'NO');
+        
+    } else {
+        removeLay(RES)
+    }
+}
+
+function removeLay(X)
+{
+    map.removeLayer(X);
+    geojson.getSource().clear();
+    map.removeLayer(geojson);
+}
+
 
 var baseGroup = new ol.layer.Group({
     title:"Base Map",
     fold: true,
-    layers:[WB, PAK, PAKADM3]
+    layers:[WB, PAK ,PAKADM3 ]
 });
 map.addLayer(baseGroup);
 
 var overlayGroup = new ol.layer.Group({
     title:"Overlays",
     fold: true,
-    layers:[KK, RES, ENC, COM, LIT, Waterways]
+    layers:[KK, Waterways]
 });
 map.addLayer(overlayGroup)
+
+// function myFunc(){
+//     map.removeLayer(LIT)
+// }
+
 
 var mousePosition = new ol.control.MousePosition({
     className: "mousePos",
@@ -196,42 +293,12 @@ var homeControl = new ol.control.Control({
 })
 
 homeButton.addEventListener("click", () => {
-    location.href = "index.php";
+    location.href = "index.html";
 })
 
 map.addControl(homeControl);
 
 
-// start : full screen Control
-
-var fsButton = document.createElement('button');
-fsButton.innerHTML = '<img src="./Images/maximize.png" alt="" style="text-align:center;margin: 2px;padding:5px; width:18px;height:18px;vertical-align:middle border-radius: 10px;"></img>';
-fsButton.className = 'myButton';
-
-var fsElement = document.createElement('div');
-fsElement.className = 'fsButtonDiv';
-fsElement.appendChild(fsButton);
-
-var fsControl = new ol.control.Control({
-    element: fsElement
-})
-
-fsButton.addEventListener("click", () => {
-    var mapEle = document.getElementById("map");
-    if (mapEle.requestFullscreen) {
-        mapEle.requestFullscreen();
-    } else if (mapEle.msRequestFullscreen) {
-        mapEle.msRequestFullscreen();
-    } else if (mapEle.mozRequestFullscreen) {
-        mapEle.mozRequestFullscreen();
-    } else if (mapEle.webkitRequestFullscreen) {
-        mapEle.webkitRequestFullscreen();
-    }
-})
-
-map.addControl(fsControl);
-
-// end : full screen Control
 
 // start : FeatureInfo Control
 // start : FeatureInfo Control
@@ -284,17 +351,10 @@ map.on('pointermove', function (evt) {
 
         var url = PAKADM3.getSource().getFeatureInfoUrl(evt.coordinate, resolution, 'EPSG:3857', {
             'INFO_FORMAT': 'application/json',
-            'propertyName': 'name_1,name_2,name_3'
+            'propertyName': 'name_1,name_2,id_3'
         });
-        // var url1 = Data.getSource().getFeatureInfoUrl(evt.coordinate, resolution, 'EPSG:3857', {
-        //     'INFO_FORMAT': 'application/json',
-        //     'propertyName': 'cantonment'
-        // });
         if (url) {
             var style = new ol.style.Style({
-                // fill: new ol.style.Fill({
-                //   color: 'rgba(0, 255, 255, 0.7)'
-                // }),
                 stroke: new ol.style.Stroke({
                     color: '#FFFF00',
                     width: 3
@@ -308,16 +368,14 @@ map.on('pointermove', function (evt) {
             });
             var feature;
             var props;
-            // console.log("blue");
             $.getJSON(url, function (data) {
                 console.log(map.getView().getZoom())
                 feature = data.features[0];
                 props = feature.properties;
-                // popup.setPosition([0,0]);
-                overlayControl.show("<h3> Province : </h3> <p>" + props.name_1.toUpperCase()
-                + "</p> <br> <br> <h3> Division : </h3> <p>" +
-                    props.name_2.toUpperCase() + "</p> <br> <br> <h3> District : </h3> <p>" +
-                    props.name_3.toUpperCase() + "</p>"
+                overlayControl.show("<h3> Cantonment : </h3> <p>" + props.name_1.toUpperCase()
+                + "</p> <br> <br> <h3> Land Category : </h3> <p>" +
+                    props.name_2.toUpperCase() + "</p> <br> <br> <h3> Survey Number : </h3> <p>" +
+                    props.id_3 + "</p>"
                 );
             })
   
@@ -779,7 +837,7 @@ zoomOutInteraction.on('boxend', function () {
 });
 
 var zoButton = document.createElement('button');
-zoButton.innerHTML = '<img src="./Images/zoom-out.png" alt="" style="text-align:center;margin: 2px;padding:5px; width:18px;height:18px;vertical-align:middle border-radius: 10px;"></img>';
+zoButton.innerHTML = '<img src="./Images/zoom-out.png" alt="" style="text-align:center;margin: 2px;padding:5px; width:18px;height:18px;vertical-align:middle; border-radius: 10px;"></img>';
 zoButton.className = 'myButton';
 zoButton.id = 'zoButton';
 
@@ -811,43 +869,28 @@ map.addControl(zoControl);
 
 
 var select1 = document.getElementById("selectCantonment");
-const cantonment = ["Sind", "Punjab", "N.W.F.P.", "Baluchistan", "Azad Kashmir", "Northern Areas"];
+const cantonment = ["MALIR", "MANGLA", "PESHAWAR", "GILGIT", "LAHORE"];
 
-// for(var i = 0; i < cantonment.length; i++) {
-//     var opt = cantonment[i];
-//     var el1 = document.createElement("option");
-//     el1.textContent = opt;
-//     el1.value = opt;
-//     select1.appendChild(el1);
-// }
+for(var i = 0; i < cantonment.length; i++) {
+    var opt = cantonment[i];
+    var el1 = document.createElement("option");
+    el1.textContent = opt;
+    el1.value = opt;
+    select1.appendChild(el1);
+}
 var e = document.getElementById("selectCantonment");
 var value = e.options[e.selectedIndex].value;
 
 
 var select2 = document.getElementById("selectLandCategory");
-const LandCategory = ["Multan", "Karachi", "Bahawalpur"];
 
-// for(var i = 0; i < LandCategory.length; i++) {
-//     var opt = LandCategory[i];
-//     var el2 = document.createElement("option");
-//     el2.textContent = opt;
-//     el2.value = opt;
-//     select2.appendChild(el2);
-// }
 var e1 = document.getElementById("selectLandCategory");
 var value = e1.options[e1.selectedIndex].value;
 
 
 var select3 = document.getElementById("selectSurveyNumber");
-const SurveyNumber = ["Pakpattan", "Khanewal", "Malir", "Rahimyar Khan"];
 
-// for(var i = 0; i < SurveyNumber.length; i++) {
-//     var opt = SurveyNumber[i];
-//     var el3 = document.createElement("option");
-//     el3.textContent = opt;
-//     el3.value = opt;
-//     select3.appendChild(el3); 
-// }
+
 var e2 = document.getElementById("selectSurveyNumber");
 var value = e2.options[e2.selectedIndex].value;
 
@@ -860,8 +903,8 @@ var value = e2.options[e2.selectedIndex].value;
 var geojson;
 var featureOverlay;
 
-var qryButton = document.createElement('button');
-qryButton.innerHTML = '<img src="./Images/database.png" alt="" style="text-align:center;margin: 2px;padding:5px; width:18px;height:18px;vertical-align:middle border-radius: 10px;"></img>';
+var qryButton = document.getElementById('Drawer');
+qryButton.innerHTML = '<img src="./Images/Drawer.png" alt="" style="text-align:center;margin: 1px;padding:5px; width:22px;height:22px;vertical-align:middle; border-radius: 10px;"></img>';
 qryButton.className = 'myButton';
 qryButton.id = 'qryButton';
 
@@ -873,11 +916,11 @@ var qryControl = new ol.control.Control({
     element: qryElement
 })
 
-var qryFlag = false;
+var qryFlag = true;
 qryButton.addEventListener("click", () => {
     // disableOtherInteraction('lengthButton');
     // qryButton.classList.toggle('clicked');
-    qryFlag = !qryFlag;
+    qryFlag = qryFlag;
     document.getElementById("map").style.cursor = "default";
     if (qryFlag) {
         if (geojson) {
@@ -908,6 +951,8 @@ qryButton.addEventListener("click", () => {
             map.removeLayer(featureOverlay);
         }
     }
+    document.getElementById("mySidenav").style.width = "250px";
+    document.getElementById("mySidenav").style.width = "0";
 
 })
 
@@ -948,12 +993,13 @@ $(function () {
         if (e.options[e.selectedIndex].text != "-- select an option --") {
             // alert("Select Cantonement");
             
-            var url = "http://localhost:8080/geoserver/Pakadm/wfs?service=WfS&version=1.1.0&request=GetFeature&typeName="+ "Pakadm:pak_adm2&" + "CQL_FILTER=name_1='" + text + "'&outputFormat=application/json"
+            var url = "http://localhost:8080/geoserver/Practice/wfs?service=WfS&version=1.1.0&request=GetFeature&typeName="+ "Practice:pak_adm3&" + "CQL_FILTER=name_1='" + text + "'&outputFormat=application/json"
             newaddGeoJsonToMap(url);
             newpopulateQueryTable(url);
             setTimeout(function () { newaddRowHandlers(url); }, 300);
             map.set("isLoading", 'NO');
             document.getElementById("selectLandCategory").disabled=false;
+            LandCategoryLayerflag = true;
             
         }
     document.getElementById("selectLandCategory").onchange = function () {
@@ -969,78 +1015,45 @@ $(function () {
                 setTimeout(function () { newaddRowHandlers(url); }, 300);
                 map.set("isLoading", 'NO');
                 document.getElementById("selectSurveyNumber").disabled=false;
+                layerFlag = true;
+                $('#selectSurveyNumber').empty();
+                $('#selectSurveyNumber').append($('<option>', {
+                    value: 0,
+                    text: '-- select an option --'
+                }));
             }
     }
     document.getElementById("selectSurveyNumber").onchange = function () {
         text = e.options[e.selectedIndex].text; 
         text1 = e1.options[e1.selectedIndex].text;
         text2 = e2.options[e2.selectedIndex].text;
+        console.log(text, text1);
         if (e.options[e.selectedIndex].text != "-- select an option --") {
-            var url = "http://localhost:8080/geoserver/Practice/wfs?service=WfS&version=1.1.0&request=GetFeature&typeName="+ "Practice:pak_adm3&" + "CQL_FILTER=name_1='" + text + "'AND name_2='" + text1 + "'AND name_3='" + text2 +"'&outputFormat=application/json"
+            //var url = "http://localhost:8080/geoserver/Practice/wfs?service=WfS&version=1.1.0&request=GetFeature&typeName="+ "Practice:pak_adm3&" + "CQL_FILTER=name_1='" + text + "'AND name_2='" + text1 + "'AND name_3='" + text2 +"'&outputFormat=application/json"
+            var url = "http://localhost:8080/geoserver/Practice/wfs?service=WfS&version=1.1.0&request=GetFeature&typeName="+ "Practice:pak_adm3&" + "CQL_FILTER=name_1='" + text + "'AND name_2='" + text1 + "'AND id_3='" + text2 +"'&outputFormat=application/json"
+            console.log(url)
             newaddGeoJsonToMap(url);
             newpopulateQueryTable(url);
             setTimeout(function () { newaddRowHandlers(url); }, 300);
             map.set("isLoading", 'NO');
+
         }
 }
-   
-    // newaddGeoJsonToMap(url);
-    // document.getElementById('attQryRun').onclick = function () {
-    //     map.set("isLoading", 'YES');
-
-    //     if (featureOverlay) {
-    //         featureOverlay.getSource().clear();
-    //         map.removeLayer(featureOverlay);
-    //     }
-
-    //     var layer = document.getElementById("selectCantonment");
-    //     var attribute = document.getElementById("selectAttribute");
-    //     var operator = document.getElementById("selectOperator");
-    //     var txt = document.getElementById("enterValue");
-
-        // if (e.options[e.selectedIndex].text != "") {
-        //     // alert("Select Cantonement");
-            
-        //     var url = "http://localhost:8080/geoserver/Pakadm/wfs?service=WfS&version=1.1.0&request=GetFeature&typeName="+ "Pakadm:pak_adm2&" + "CQL_FILTER=name_1='Punjab'" + "&outputFormat=application/json"
-        //     newaddGeoJsonToMap(url);
-        //     newpopulateQueryTable(url);
-        //     setTimeout(function () { newaddRowHandlers(url); }, 300);
-        //     map.set("isLoading", 'NO');
-        // }
-        // else if (e1.options.selectedIndex == 0) {
-        //     alert("Select Land Category");
-        // }
-        // else if (e2.options.selectedIndex == 0) {
-        //     alert("Select Survey Number");
-        // }
-        // if{
-        //     var value_layer = "Practice:pakistan_with_kashmir"
-        //     var text = e.options[e.selectedIndex].text; 
-        //     var text1 = e1.options[e1.selectedIndex].text; 
-        //     var text2 = e2.options[e2.selectedIndex].text; 
-        //     console.log(typeof(text));
-        // }
-            //var url = "http://localhost:8080/geoserver/Practice/wfs?service=WfS&version=1.1.0&request=GetFeature&typeName=" + "Practice:interndata&" + "CQL_FILTER=land_categ='" + text1 + "'AND cantonment='" + text + "'AND survey_num='"+ text2 +"'&outputFormat=application/json"
-            // console.log(url);
-            // newaddGeoJsonToMap(url);
-            // newpopulateQueryTable(url);
-            // setTimeout(function () { newaddRowHandlers(url); }, 300);
-            // map.set("isLoading", 'NO');
+     
     }
 });
 
 
-function newaddGeoJsonToMap(url) {
 
+
+function newaddGeoJsonToMap(url) {
+    console.log(url)
     if (geojson) {
         geojson.getSource().clear();
         map.removeLayer(geojson);
     }
 
     var style = new ol.style.Style({
-        // fill: new ol.style.Fill({
-        //   color: 'rgba(0, 255, 255, 0.7)'
-        // }),
         stroke: new ol.style.Stroke({
             color: '#FFFF00',
             width: 3
@@ -1065,13 +1078,15 @@ function newaddGeoJsonToMap(url) {
     geojson.getSource().on('addfeature', function () {
         map.getView().fit(
             geojson.getSource().getExtent(),
-            { duration: 1590, size: map.getSize(), maxZoom: 9 }
+            { duration: 1590, size: map.getSize(), maxZoom: 12 }
         );
     });
     map.addLayer(geojson);
 };
-
+var arra = [];
+var arraa = [];
 function newpopulateQueryTable(url) {
+    console.log(url)
     console.log("in")
     if (typeof attributePanel !== 'undefined') {
         if (attributePanel.parentElement !== null) {
@@ -1079,11 +1094,14 @@ function newpopulateQueryTable(url) {
         }
     }
     $.getJSON(url, function (data) {
+
         if(data.features.length == 0){
             alert("No Data Exist");
         }
         else{
+      
         var col = [];
+        console.log(data)
         for (var i = 0; i < data.features.length; i++) {
 
             for (var key in data.features[i].properties) {
@@ -1092,10 +1110,25 @@ function newpopulateQueryTable(url) {
                     col.push(key);
                     console.log(data.features.length)
                 }
+                if(LandCategoryLayerflag==true)
+                {
+                    arra[i]=data.features[i].properties.name_2;
+                }
+                if(layerFlag==true)
+                {
+                    arraa[i] = data.features[i].properties.id_3;
+                }
+                else{
+                    console.log("");
+                }
+                
+            
             }
         }
+     
+       
         // var z=0
-        col.push('id');
+        col.push(data);
         var table = document.createElement("table");
 
         table.setAttribute("class", "table table-bordered table-hover table-condensed");
@@ -1113,13 +1146,17 @@ function newpopulateQueryTable(url) {
                 z = i;
             }
         }
+        var leng=data.features.length;
+       
+
 
         // ADD JSON DATA TO THE TABLE AS ROWS.
         for (var i = 0; i < data.features.length; i++) {
             tr = table.insertRow(-1);
             // console.log("in",data.features.length);
-            for (var j = 3; j < col.length; j++) {
+            for (var j = 3; j < col.length; j++){
                 var tabCell = tr.insertCell(-1);
+               
                 if (j == z) { tabCell.innerHTML = data.features[i]['id']; }
                 else {
                     tabCell.innerHTML = data.features[i].properties[col[j]];
@@ -1138,9 +1175,81 @@ function newpopulateQueryTable(url) {
         tabDiv.appendChild(table);
         document.getElementById("attListDiv").style.display = "none";
         }
+
+        var levelOneArray = [];
+        function onlyUnique(value, index, self) {
+            return self.indexOf(value) === index;
+          }
+          
+        var levelOneArray = arra.filter(onlyUnique)
+        if(LandCategoryLayerflag==true){
+            for(var i = 0; i < levelOneArray.length; i++) {
+                var opt = levelOneArray[i];
+                var el2 = document.createElement("option");
+                el2.textContent = opt;
+                el2.value = opt;
+                select2.appendChild(el2);
+                }
+        }
+        
+        if(layerFlag==true){
+        for(var i = 0; i < arraa.length; i++) {
+            var opt = arraa[i];
+            var el3 = document.createElement("option");
+            el3.textContent = opt;
+            el3.value = opt;
+            select3.appendChild(el3);
+            }
+            arraa = [];
+       }
+        LandCategoryLayerflag=false;
+        layerFlag=false;
+        console.log("Survey Number Array: ", arraa);
+      
+        
+
     });
 
 };
+
+
+function loadprops(layername) {
+    selectedLayer = layername;
+    fetch(
+      geoserver_ip+ ':'+geoserver_port+"/geoserver/wfs?service=wfs&version=2.0.0&request=DescribeFeatureType&typeNames=" + 
+        layername +
+        "&outputFormat=application/json",
+      {
+        method: "GET",
+        headers: MyHeaders,
+      }
+    )
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (json) {
+          var allprops = json.featureTypes[0].properties;
+        var ColumnnamesSelect = document.getElementById("Columnnames");
+            ColumnnamesSelect.innerHTML = ''
+          for (i = 0; i < allprops.length; i++){
+              if (allprops[i].name != 'the_geom') {
+                  ColumnnamesSelect.innerHTML +=
+                    '<option value="' +
+                    allprops[i].name +
+                    '"> ' +
+                    allprops[i].name +
+                    "</option>";
+              }
+
+          }
+      });
+}
+
+
+
+
+
+
 
 var highlightStyle = new ol.style.Style({
     fill: new ol.style.Fill({
@@ -1278,11 +1387,3 @@ function myFunction() {
       x.style.display = "none";
     }
   }
-
-
-
-
-
-
-
-

@@ -1,13 +1,13 @@
 <?php
 include "config.php";
 
-$sql = "select distinct name_1,id_1 from pak_adm3";
+$sql = "select distinct name_1 from pak_adm3";
 $result = pg_query($con, $sql);
 
-$sql1 = "select distinct name_2,id_2 from pak_adm3 order by name_2";
+$sql1 = "select distinct name_2 from pak_adm3 order by name_2";
 $result1 = pg_query($con, $sql1);
 
-$sql2 = "select distinct name_3,id_3 from pak_adm3 order by name_3";
+$sql2 = "select distinct name_3 from pak_adm3 order by name_3";
 $result2 = pg_query($con, $sql2);
 ?>
 <!DOCTYPE html>
@@ -34,6 +34,7 @@ $result2 = pg_query($con, $sql2);
 
 
   <div id="popup" class="ol-popup">
+    <h1></h1>
     <a href="#" id="popup-closer" class="ol-popup-closer"></a>
     <div id="popup-content" style="font-style: italic;"><h1>PROVINCE</h1></div>
   </div>
