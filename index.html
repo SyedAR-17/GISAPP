@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <link rel="stylesheet" href="https://cdn.rawgit.com/Viglino/ol-ext/master/dist/ol-ext.min.css" />
@@ -11,8 +10,20 @@
   <link rel="stylesheet" href="./resources/jquery-ui-1.13.2.custom/jquery-ui.css">
   <!-- <link rel="stylesheet" href="./resources/css/bootstrap.css"> -->
   <link rel="stylesheet" href="main.css">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="./jquery-3.6.0.min.js"></script>
+  <script src="./resources/jquery-ui-1.13.2.custom/jquery-ui.js"></script>
+  <script>
+      $( function() {
+      $( "#mySidenav" ).accordion();
+      } );
+  </script>
 </head>
 <body>
+  <div class="header">
+    <h3 style="margin: 0px; padding-top: 8px;"> <button  id="QButton"  onclick="openNav()"><img id="QueryImg" src="./Images/Drawer.png"/></button>Web GIS</h3>
+  </div>
   <div style="margin-left: 100px;" id="main">
     <!-- <div id="HeadingDIV" style="width: 99.7%; height: 50px;position: absolute; top: 0px; left: 0px;">
       <h3 id="Heading">LAND MANAGEMENT SYSTEM</h3>
@@ -20,12 +31,11 @@
         <div style="background-color: red; ">
           <p id="content"></p>
         </div>
-        <div id="map"></div>
+        <div style="z-index: 1;" id="map"></div>
         <div id="popup" class="ol-popup">
           <a href="#" id="popup-closer" class="ol-popup-closer"></a>
           <div id="popup-content" style="font-style: italic;"><h1>PROVINCE</h1></div>
         </div>
-        
         
         <div class="attListDiv" id="attListDiv">
         </div>
@@ -35,68 +45,50 @@
         </div> -->
       
       
-        <div style="position: fixed; color: white;" id="mySidenav" class="sidenav">
-          <a style="position:absolute;z-index: -1;" href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <div  style="height: fit-content;color: white;margin: 0px; padding:0px;z-index: -2; position: absolute; top: 0px; left: 0px;" class="attQueryDiv" id="attQueryDiv">
-              <div class="headerDiv" id="headerDiv">
-                  <label for="">Attribute Query</label>
-              </div><br>
+        <div style="position: fixed; top: 50px; color: white; " id="mySidenav" class="sidenav" >
+          <h3>Attribute Query  <a style="position:absolute;z-index: 2;" href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a></h3>
+          <div style="color: white; height: fit-content ;width:300px;margin: 1px; padding:3px; " class="attQueryDiv" id="attQueryDiv">
               <label for="">Cantonment</label>
               <select name="selectCantonment" id="selectCantonment">
-                <option disabled selected value> -- select an option -- </option>
+                  <option disabled selected value> -- select an option -- </option>
               </select>
-            <br><br>
-            <label for="">Land Category</label>
+              <br><br>
+              <label for="">Land Category</label>
               <select name="selectLandCategory" id="selectLandCategory">
-                <option disabled selected value> -- select an option -- </option>
+                  <option disabled selected value> -- select an option -- </option>
               </select>
-            <br><br>
-            <label for="">Survey Number</label>
+              <br><br>
+              <label for="">Survey Number</label>
               <select name="selectSurveyNumber" id="selectSurveyNumber">
-                <option disabled selected value> -- select an option -- </option>
+                  <option disabled selected value> -- select an option -- </option>
               </select>
-          <br><br>
-          <br>
-        </div>
-          <div>
-            <div  style="background-color: #d8d3c0; width:100%;height: 300px;color: white;margin: 0px; padding:0px; position: absolute; top: 300px; left: 0px;">
-              <div style="width: 100%; border-top: solid; border-color: black;" class="headerDiv" id="headerDiv" >
-                <label style="font-weight: bolder;" for="">Information Layer</label>
-                <br>
-              </div>
-              <div class="checkDiv" id="checkBoxDiv">
-                <input class="checkbox" type="checkbox" id="layer1" name="layer1" value="Litigation" onclick="validate()">
-                <label class="checkbox"  for="layer1">Litigation</label><br>
-                <input class="checkbox"  type="checkbox" id="layer2" name="layer2" value="Encrochment" />
-                <label class="checkbox"  for="layer2">Encrochment</label><br>
-                <input class="checkbox"  type="checkbox" id="layer3" name="layer3" value="Commercial" />
-                <label class="checkbox"  for="layer3">Commercial</label><br>
-                <input class="checkbox"  type="checkbox" id="layer4" name="layer4" value="Residential" />
-                <label class="checkbox"  for="layer4">Residential</label><br>
-          
-          
-              </div>
-              <div>
-  
-              </div>
-            
-           </div>
-            
+              <br><br>
+             
           </div>
-        </div>
+          <h3>Information Layers</h3>
+          <div class="checkDiv" id="checkBoxDiv" style="color:black; height: fit-content ;width:300px;margin: 1px; padding:3px; ">
+                
+                  <input class="checkbox" type="checkbox" id="layer1" name="layer1" value="Litigation" onclick="validate()">
+                  <label class="checkbox"  for="layer1">Litigation</label><br>
+                  <input class="checkbox"  type="checkbox" id="layer2" name="layer2" value="Encrochment" />
+                  <label class="checkbox"  for="layer2">Encrochment</label><br>
+                  <input class="checkbox"  type="checkbox" id="layer3" name="layer3" value="Commercial" />
+                  <label class="checkbox"  for="layer3">Commercial</label><br>
+                  <input class="checkbox"  type="checkbox" id="layer4" name="layer4" value="Residential" />
+                  <label class="checkbox"  for="layer4">Residential</label><br>
+
+              
+          </div>
+          
+      </div>
         
-        <button id="Drawer"  onclick="openNav()">&#9776; open</button>
-  
+        
     
 
   </div>
  
     
-    
   
-   
-
-
 
   <link rel="stylesheet" href="./ol-ext-master/dist/ol-ext.min.css" /> 
   
@@ -116,7 +108,7 @@
   <!-- <script type="module" src="./database.js"></script> -->
   <script src="./resources/openlayers/ol/ol.js"></script>  
   <script type="text/javascript" src="./ol-ext-master/dist/ol-ext.min.js"></script>
-  <script src="./jquery-3.6.0.min.js"></script>
+
   <script src="./resources/jquery-ui-1.13.2.custom/jquery-ui.js"></script>
   <script src="./resources/layerswitcher/ol-layerswitcher.js"></script>
   <script type="module" src="./main.js"></script>

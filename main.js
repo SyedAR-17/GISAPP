@@ -12,10 +12,10 @@ var LandCategoryLayerflag = false;
 //     console.log("HELLO");
 // }
 
-// var EleButton = document.getElementById("layer1").addEventListener("change", validate);
-// var EleButton = document.getElementById("layer2").addEventListener("change", validate1);
-// var EleButton = document.getElementById("layer3").addEventListener("change", validate2);
-// var EleButton = document.getElementById("layer4").addEventListener("change", validate3);
+var EleButton = document.getElementById("layer1").addEventListener("change", validate);
+var EleButton = document.getElementById("layer2").addEventListener("change", validate1);
+var EleButton = document.getElementById("layer3").addEventListener("change", validate2);
+var EleButton = document.getElementById("layer4").addEventListener("change", validate3);
 
 
 $(document).ready(function(){
@@ -903,17 +903,17 @@ var value = e2.options[e2.selectedIndex].value;
 var geojson;
 var featureOverlay;
 
-var qryButton = document.getElementById('Drawer');
-qryButton.innerHTML = '<img src="./Images/Drawer.png" alt="" style="text-align:center;margin: 1px;padding:5px; width:22px;height:22px;vertical-align:middle; border-radius: 10px;"></img>';
-qryButton.className = 'myButton';
-qryButton.id = 'qryButton';
+var qryButton = document.getElementById('QButton');
+//qryButton.innerHTML = '<img alt="" style="text-align:center;margin: 1px;padding:5px; width:22px;height:22px;vertical-align:middle; "></img>';
+// qryButton.className = 'myButton';
+// qryButton.id = 'qryButton';
 
 var qryElement = document.createElement('div');
-qryElement.className = 'myButtonDiv';
+// qryElement.className = 'myButtonDiv';
 qryElement.appendChild(qryButton);
 
 var qryControl = new ol.control.Control({
-    element: qryElement
+    element: qryButton
 })
 
 var qryFlag = true;
