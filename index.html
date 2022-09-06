@@ -25,13 +25,10 @@
     <h3 style="margin: 0px; padding-top: 8px;"> <button  id="QButton"  onclick="openNav()"><img id="QueryImg" src="./Images/Drawer.png"/></button>Web GIS</h3>
   </div>
   <div style="margin-left: 100px;" id="main">
-    <!-- <div id="HeadingDIV" style="width: 99.7%; height: 50px;position: absolute; top: 0px; left: 0px;">
-      <h3 id="Heading">LAND MANAGEMENT SYSTEM</h3>
-    </div> -->
         <div style="background-color: red; ">
           <p id="content"></p>
         </div>
-        <div style="z-index: 1;" id="map"></div>
+        <div id="map"></div>
         <div id="popup" class="ol-popup">
           <a href="#" id="popup-closer" class="ol-popup-closer"></a>
           <div id="popup-content" style="font-style: italic;"><h1>PROVINCE</h1></div>
@@ -43,19 +40,20 @@
         <div id="legend">
             <img class="legendIMG" src="./Images/LAND CATEGORIES.png" alt="Legend"/>
         </div> -->
-      
-      
+        <div>
+          
+        </div>
         <div style="position: fixed; top: 50px; color: white; " id="mySidenav" class="sidenav" >
-          <h3>Attribute Query  <a style="position:absolute;z-index: 2;" href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a></h3>
+          <h3 style="background-color: #d8c3a5; border-color: #838d8a;" >Attribute Query  <a style="position:absolute;z-index: 2;" href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a></h3>
           <div style="color: white; height: fit-content ;width:300px;margin: 1px; padding:3px; " class="attQueryDiv" id="attQueryDiv">
               <label for="">Cantonment</label>
               <select name="selectCantonment" id="selectCantonment">
-                  <option disabled selected value> -- select an option -- </option>
+                  <option selected value> -- select an option -- </option>
               </select>
               <br><br>
               <label for="">Land Category</label>
               <select name="selectLandCategory" id="selectLandCategory">
-                  <option disabled selected value> -- select an option -- </option>
+                  <option selected value> -- select an option -- </option>
               </select>
               <br><br>
               <label for="">Survey Number</label>
@@ -65,7 +63,7 @@
               <br><br>
              
           </div>
-          <h3>Information Layers</h3>
+          <h3 style="background-color: #d8c3a5; border-color: #838d8a;">Information Layers</h3>
           <div class="checkDiv" id="checkBoxDiv" style="color:black; height: fit-content ;width:300px;margin: 1px; padding:3px; ">
                 
                   <input class="checkbox" type="checkbox" id="layer1" name="layer1" value="Litigation" onclick="validate()">
@@ -76,16 +74,58 @@
                   <label class="checkbox"  for="layer3">Commercial</label><br>
                   <input class="checkbox"  type="checkbox" id="layer4" name="layer4" value="Residential" />
                   <label class="checkbox"  for="layer4">Residential</label><br>
-
-              
-          </div>
-          
+          </div> 
       </div>
         
         
     
 
   </div>
+  <div id="tab">
+    <table id="table">
+      <thead>
+        <tr>
+          <th> Attribute </th>
+          <th> Value </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th> Cantonment </th>
+          <td id = "tabs-1"> </td>
+        </tr>
+        <tr>
+          <th> Land Category </th>
+          <td id="tabs-2"> </td>
+        </tr>
+        <tr>
+          <th> Survey Number </th>
+          <td id="tabs-3"> </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+
+  
+  <!-- <div >
+    <ul>
+      <li><a href="#tabs-1">Nunc tincidunt</a></li>
+      <li><a href="#tabs-2">Proin dolor</a></li>
+      <li><a href="#tabs-3">Aenean lacinia</a></li>
+    </ul>
+    <div id="tabs-1">
+      <p></p>
+    </div>
+    <div id="tabs-2">
+      <p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.</p>
+    </div>
+    <div id="tabs-3">
+      <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+      <p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
+    </div>
+  </div> -->
  
     
   

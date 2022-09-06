@@ -1,6 +1,9 @@
 $( function() {
     $( "#accordion" ).accordion();
   } );
+//   $( function() {
+//     $( "#tabs" ).tabs();
+//   } );
 
 
 var layerFlag = false; 
@@ -70,7 +73,7 @@ var COM = new ol.layer.Tile({
     minZoom: 10,
     source: new ol.source.TileWMS({
         url:'http://localhost:8080/geoserver/Practice/wms',
-        params:{'LAYERS':'Practice:Commercial', 'TILED':true},
+        params:{'LAYERS':'Practice:commercial', 'TILED':true},
         serverType: 'geoserver',
         visible: true
     })
@@ -81,7 +84,7 @@ var ENC = new ol.layer.Tile({
     minZoom: 10,
     source: new ol.source.TileWMS({
         url:'http://localhost:8080/geoserver/Practice/wms',
-        params:{'LAYERS':'Practice:Encroach', 'TILED':true},
+        params:{'LAYERS':'Practice:encroach', 'TILED':true},
         serverType: 'geoserver',
         visible: true
     })
@@ -91,7 +94,7 @@ var LIT = new ol.layer.Tile({
     title: "Litigation",
     source: new ol.source.TileWMS({
         url:'http://localhost:8080/geoserver/Practice/wms',
-        params:{'LAYERS':'Practice:Litigation', 'TILED':true},
+        params:{'LAYERS':'Practice:litigation', 'TILED':true},
         serverType: 'geoserver',
         visible: true
     })
@@ -113,7 +116,7 @@ var PAKADM = new ol.layer.Tile({
     title: "Pakistan Divisons",
     source: new ol.source.TileWMS({
         url:'http://localhost:8080/geoserver/Pakadm/wms',
-        params:{'LAYERS':'Pakadm:pak_adm2', 'TILED':true},
+        params:{'LAYERS':'Pakadm:pak_adm2','TILED':true},
         serverType: 'geoserver',
         visible: true
     })
@@ -125,11 +128,12 @@ var PAKADM3 = new ol.layer.Tile({
     source: new ol.source.TileWMS({
         url:'http://localhost:8080/geoserver/Practice/wms',
         params:{'LAYERS':'Practice:pak_adm3', 'TILED':true},
+    
         serverType: 'geoserver',
         visible: true
     })
 });
-// map.addLayer(PAKADM);
+//map.addLayer(PAKADM);
 
 var KK = new ol.layer.Tile({
     title: "Karachi Shore",
@@ -163,46 +167,53 @@ map.addControl(layerSwitch);
 
 
 function validate(){
-    if (document.getElementById('layer1').checked) {
+    var text = e.options[e.selectedIndex].text; 
+    if (document.getElementById('layer1').checked && text != '-- select an option --') {
         map.addLayer(LIT);
-        var url = "http://localhost:8080/geoserver/Practice/wfs?service=WfS&version=1.1.0&request=GetFeature&typeName="+ "Practice:Litigation&" + "outputFormat=application/json"
+        var url = "http://localhost:8080/geoserver/Practice/wfs?service=WfS&version=1.1.0&request=GetFeature&typeName="+ "Practice:litigation&" + "CQL_FILTER=cantt='" + text + "'&outputFormat=application/json"
         newaddGeoJsonToMap(url);
         newpopulateQueryTable(url);
         setTimeout(function () { newaddRowHandlers(url); }, 300);
         map.set("isLoading", 'NO');
     } else {
+        alert("Select the Cantonment")
         removeLay(LIT)
     }
 }
 
 function validate1(){
-    if (document.getElementById('layer2').checked) {
+    var text = e.options[e.selectedIndex].text; 
+    if (document.getElementById('layer2').checked && text != '-- select an option --') {
         map.addLayer(ENC);
-        var url = "http://localhost:8080/geoserver/Practice/wfs?service=WfS&version=1.1.0&request=GetFeature&typeName="+ "	Practice:Encroach&" + "outputFormat=application/json"
+        var url = "http://localhost:8080/geoserver/Practice/wfs?service=WfS&version=1.1.0&request=GetFeature&typeName="+ "Practice:encroach&" + "CQL_FILTER=cantt='" + text + "'&outputFormat=application/json"
         newaddGeoJsonToMap(url);
         newpopulateQueryTable(url);
         setTimeout(function () { newaddRowHandlers(url); }, 300);
         map.set("isLoading", 'NO');
     } else {
+        alert("Select the Cantonment")
         removeLay(ENC)
     }
 }
 
 function validate2(){
-    if (document.getElementById('layer3').checked) {
+    var text = e.options[e.selectedIndex].text; 
+    if (document.getElementById('layer3').checked && text != '-- select an option --') {
         map.addLayer(COM);
-        var url = "http://localhost:8080/geoserver/Practice/wfs?service=WfS&version=1.1.0&request=GetFeature&typeName="+ "Practice:Commercial&" + "outputFormat=application/json"
+        var url = "http://localhost:8080/geoserver/Practice/wfs?service=WfS&version=1.1.0&request=GetFeature&typeName="+ "Practice:commercial&" + "outputFormat=application/json"
         newaddGeoJsonToMap(url);
         newpopulateQueryTable(url);
         setTimeout(function () { newaddRowHandlers(url); }, 300);
         map.set("isLoading", 'NO');
     } else {
+        alert("Select the Cantonment")
         removeLay(COM)
     }
 }
 
 function validate3(){
-    if (document.getElementById('layer4').checked) {
+    var text = e.options[e.selectedIndex].text; 
+    if (document.getElementById('layer4').checked && text != '-- select an option --') {
         map.addLayer(RES);
        RES.displayInLayerSwitcher = false;
        // map.RES.setVisibility(false);
@@ -213,6 +224,7 @@ function validate3(){
         map.set("isLoading", 'NO');
         
     } else {
+        alert("Select the Cantonment")
         removeLay(RES)
     }
 }
@@ -320,6 +332,8 @@ var featureInfoFlag = false;
 featureInfoButton.addEventListener("click", () => {
     featureInfoButton.classList.toggle('clicked');
     featureInfoFlag = !featureInfoFlag;
+    $("#tab").slideToggle("slow");
+  //  $(this).text($(this).text() == "Hide map" ? "Show map" : "Hide map");
     // console.log(featureInfoFlag, "green")
 })
 
@@ -372,11 +386,14 @@ map.on('pointermove', function (evt) {
                 console.log(map.getView().getZoom())
                 feature = data.features[0];
                 props = feature.properties;
-                overlayControl.show("<h3> Cantonment : </h3> <p>" + props.name_1.toUpperCase()
-                + "</p> <br> <br> <h3> Land Category : </h3> <p>" +
-                    props.name_2.toUpperCase() + "</p> <br> <br> <h3> Survey Number : </h3> <p>" +
-                    props.id_3 + "</p>"
-                );
+                document.getElementById("tabs-1").innerHTML=props.name_1.toUpperCase();
+                document.getElementById("tabs-2").innerHTML=props.name_2.toUpperCase();
+                document.getElementById("tabs-3").innerHTML=props.id_3;
+                // overlayControl.show("<h3> Cantonment : </h3> <p>" + props.name_1.toUpperCase()
+                // + "</p> <br> <br> <h3> Land Category : </h3> <p>" +
+                //     props.name_2.toUpperCase() + "</p> <br> <br> <h3> Survey Number : </h3> <p>" +
+                //     props.id_3 + "</p>"
+                // );
             })
   
         } else {
@@ -939,7 +956,7 @@ qryButton.addEventListener("click", () => {
         addMapLayerList();
     } else {
         document.getElementById("attQueryDiv").style.display = "none";
-        document.getElementById("attListDiv").style.display = "none";
+        document.getElementById("attListDiv").style.display = "block";
 
         if (geojson) {
             geojson.getSource().clear();
@@ -1002,13 +1019,23 @@ $(function () {
             LandCategoryLayerflag = true;
             
         }
+        else{
+            map.getView().setCenter(ol.proj.transform([69.3451,30.3753], 'EPSG:4326', 'EPSG:3857'));
+            geojson.getSource().clear();
+            map.removeLayer(geojson);
+            map.getView().setZoom(5);
+            $('#selectLandCategory').empty();
+            $('#selectLandCategory').append($('<option>', {
+                value: 0,
+                text: '-- select an option --'
+            }))
+        }
     document.getElementById("selectLandCategory").onchange = function () {
             text = e.options[e.selectedIndex].text; 
             text1 = e1.options[e1.selectedIndex].text;
             console.log(text, text1)
-            if (e.options[e.selectedIndex].text1 != "-- select an option --") {
-                // alert("Select Cantonement");
-                
+            if (e1.options[e1.selectedIndex].text != "-- select an option --") {
+            
                 var url = "http://localhost:8080/geoserver/Practice/wfs?service=WfS&version=1.1.0&request=GetFeature&typeName="+ "Practice:pak_adm3&" + "CQL_FILTER=name_1='" + text + "'AND name_2='" + text1 + "'&outputFormat=application/json"
                 newaddGeoJsonToMap(url);
                 newpopulateQueryTable(url);
@@ -1022,13 +1049,26 @@ $(function () {
                     text: '-- select an option --'
                 }));
             }
+            else{
+                console.log("XX");
+                var url = "http://localhost:8080/geoserver/Practice/wfs?service=WfS&version=1.1.0&request=GetFeature&typeName="+ "Practice:pak_adm3&" + "CQL_FILTER=name_1='" + text + "'&outputFormat=application/json"
+                newaddGeoJsonToMap(url);
+                newpopulateQueryTable(url);
+                setTimeout(function () { newaddRowHandlers(url); }, 300);
+                map.set("isLoading", 'NO');
+                $('#selectSurveyNumber').empty();
+                $('#selectSurveyNumber').append($('<option>', {
+                    value: 0,
+                    text: '-- select an option --'
+                }));
+            }
     }
     document.getElementById("selectSurveyNumber").onchange = function () {
         text = e.options[e.selectedIndex].text; 
         text1 = e1.options[e1.selectedIndex].text;
         text2 = e2.options[e2.selectedIndex].text;
         console.log(text, text1);
-        if (e.options[e.selectedIndex].text != "-- select an option --") {
+        if (e2.options[e2.selectedIndex].text != "-- select an option --") {
             //var url = "http://localhost:8080/geoserver/Practice/wfs?service=WfS&version=1.1.0&request=GetFeature&typeName="+ "Practice:pak_adm3&" + "CQL_FILTER=name_1='" + text + "'AND name_2='" + text1 + "'AND name_3='" + text2 +"'&outputFormat=application/json"
             var url = "http://localhost:8080/geoserver/Practice/wfs?service=WfS&version=1.1.0&request=GetFeature&typeName="+ "Practice:pak_adm3&" + "CQL_FILTER=name_1='" + text + "'AND name_2='" + text1 + "'AND id_3='" + text2 +"'&outputFormat=application/json"
             console.log(url)
@@ -1037,6 +1077,13 @@ $(function () {
             setTimeout(function () { newaddRowHandlers(url); }, 300);
             map.set("isLoading", 'NO');
 
+        }
+        else{
+            var url = "http://localhost:8080/geoserver/Practice/wfs?service=WfS&version=1.1.0&request=GetFeature&typeName="+ "Practice:pak_adm3&" + "CQL_FILTER=name_1='" + text + "'AND name_2='" + text1 + "'&outputFormat=application/json"
+            newaddGeoJsonToMap(url);
+            newpopulateQueryTable(url);
+            setTimeout(function () { newaddRowHandlers(url); }, 300);
+            map.set("isLoading", 'NO');
         }
 }
      
@@ -1387,3 +1434,38 @@ function myFunction() {
       x.style.display = "none";
     }
   }
+
+  (function ($) {
+    $.fn.styleTable = function (options) {
+        var defaults = {
+            css: 'styleTable'
+        };
+        options = $.extend(defaults, options);
+
+        return this.each(function () {
+
+            input = $(this);
+            input.addClass(options.css);
+
+            input.find("tr").live('mouseover mouseout', function (event) {
+                if (event.type == 'mouseover') {
+                    $(this).children("td").addClass("ui-state-hover");
+                } else {
+                    $(this).children("td").removeClass("ui-state-hover");
+                }
+            });
+
+            input.find("th").addClass("ui-state-default");
+            input.find("td").addClass("ui-widget-content");
+
+            input.find("tr").each(function () {
+                $(this).children("td:not(:first)").addClass("first");
+                $(this).children("th:not(:first)").addClass("first");
+            });
+        });
+    };
+})(jQuery);
+
+$(document).ready(function () {
+    $("#Table1").styleTable();
+});
