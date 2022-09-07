@@ -64,6 +64,7 @@ var RES = new ol.layer.Tile({
         params:{'LAYERS':'Practice:residential', 'TILED':true},
         serverType: 'geoserver',
         visible: true,
+        displayInLayerSwitcher: false
     })
 });
 
@@ -176,7 +177,6 @@ function validate(){
         setTimeout(function () { newaddRowHandlers(url); }, 300);
         map.set("isLoading", 'NO');
     } else {
-        alert("Select the Cantonment")
         removeLay(LIT)
     }
 }
@@ -184,14 +184,13 @@ function validate(){
 function validate1(){
     var text = e.options[e.selectedIndex].text; 
     if (document.getElementById('layer2').checked && text != '-- select an option --') {
-        map.addLayer(ENC);
+        //map.addLayer(ENC);
         var url = "http://localhost:8080/geoserver/Practice/wfs?service=WfS&version=1.1.0&request=GetFeature&typeName="+ "Practice:encroach&" + "CQL_FILTER=cantt='" + text + "'&outputFormat=application/json"
         newaddGeoJsonToMap(url);
         newpopulateQueryTable(url);
         setTimeout(function () { newaddRowHandlers(url); }, 300);
         map.set("isLoading", 'NO');
     } else {
-        alert("Select the Cantonment")
         removeLay(ENC)
     }
 }
@@ -206,7 +205,6 @@ function validate2(){
         setTimeout(function () { newaddRowHandlers(url); }, 300);
         map.set("isLoading", 'NO');
     } else {
-        alert("Select the Cantonment")
         removeLay(COM)
     }
 }
@@ -224,7 +222,6 @@ function validate3(){
         map.set("isLoading", 'NO');
         
     } else {
-        alert("Select the Cantonment")
         removeLay(RES)
     }
 }
@@ -332,7 +329,7 @@ var featureInfoFlag = false;
 featureInfoButton.addEventListener("click", () => {
     featureInfoButton.classList.toggle('clicked');
     featureInfoFlag = !featureInfoFlag;
-    $("#tab").slideToggle("slow");
+    $("#tabs").slideToggle("slow");
   //  $(this).text($(this).text() == "Hide map" ? "Show map" : "Hide map");
     // console.log(featureInfoFlag, "green")
 })
@@ -1017,7 +1014,11 @@ $(function () {
             map.set("isLoading", 'NO');
             document.getElementById("selectLandCategory").disabled=false;
             LandCategoryLayerflag = true;
-            
+            $('#selectLandCategory').empty();
+            $('#selectLandCategory').append($('<option>', {
+                value: 0,
+                text: '-- select an option --'
+            }))
         }
         else{
             map.getView().setCenter(ol.proj.transform([69.3451,30.3753], 'EPSG:4326', 'EPSG:3857'));
@@ -1029,6 +1030,7 @@ $(function () {
                 value: 0,
                 text: '-- select an option --'
             }))
+           
         }
     document.getElementById("selectLandCategory").onchange = function () {
             text = e.options[e.selectedIndex].text; 
@@ -1227,8 +1229,8 @@ function newpopulateQueryTable(url) {
         function onlyUnique(value, index, self) {
             return self.indexOf(value) === index;
           }
-          
-        var levelOneArray = arra.filter(onlyUnique)
+        var levelOneArray=[];  
+        levelOneArray = arra.filter(onlyUnique)
         if(LandCategoryLayerflag==true){
             for(var i = 0; i < levelOneArray.length; i++) {
                 var opt = levelOneArray[i];
@@ -1237,8 +1239,9 @@ function newpopulateQueryTable(url) {
                 el2.value = opt;
                 select2.appendChild(el2);
                 }
+                arra=[];
         }
-        
+
         if(layerFlag==true){
         for(var i = 0; i < arraa.length; i++) {
             var opt = arraa[i];
@@ -1248,6 +1251,7 @@ function newpopulateQueryTable(url) {
             select3.appendChild(el3);
             }
             arraa = [];
+
        }
         LandCategoryLayerflag=false;
         layerFlag=false;
@@ -1465,7 +1469,3 @@ function myFunction() {
         });
     };
 })(jQuery);
-
-$(document).ready(function () {
-    $("#Table1").styleTable();
-});
