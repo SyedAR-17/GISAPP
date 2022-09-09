@@ -1097,23 +1097,73 @@ $(function () {
 
 function newaddGeoJsonToMap(url) {
     console.log(url)
-    if (geojson) {
-        geojson.getSource().clear();
-        map.removeLayer(geojson);
-    }
-
-    var style = new ol.style.Style({
-        stroke: new ol.style.Stroke({
-            color: '#FFFF00',
-            width: 3
-        }),
-        image: new ol.style.Circle({
-            radius: 7,
-            fill: new ol.style.Fill({
-                color: '#FFFF00'
-            })
-        })
+    // if (geojson) {
+    //     geojson.getSource().clear();
+    //     map.removeLayer(geojson);
+    // }
+    $("#selectLandCategory").change(function () {
+        if (geojson) {
+                geojson.getSource().clear();
+                map.removeLayer(geojson);
+            }
     });
+    var value2=e2.options[e2.selectedIndex].text ;
+    var value = e1.options[e1.selectedIndex].value;
+
+        if(value == 'A1'){
+            var col = 'rgb(255,0,0,0.6)';
+        }
+        else if(value == 'A2'){
+            var col = 'rgb(102,255,255,0.6)';
+        }
+        else if(value == 'B1'){
+            var col = 'rgb(204,102,0,0.6)';
+        }
+        else if(value == 'B2'){
+            var col = 'rgb(51,0,102,0.6)';
+        }
+        else if(value == 'B3'){
+            var col = 'rgb(51,60,102,0.6)';
+        }
+        else if(value == 'C'){
+            var col = 'rgb(60,,30,0.6)';
+        }
+        else if(value == 'CG'){
+            var col = 'rgb(0,255,0,0.6)';
+        }
+        else{
+            var col = 'rgb(0,0,0,0.3)'
+        }
+        var style = new ol.style.Style({
+            // fill:true,
+            // fillOpacity: 1, 
+            stroke: new ol.style.Stroke({
+                color: '#FFFF00',
+                width: 3
+            }),
+                fill: new ol.style.Fill({
+                    color: col,
+                    opacity: 0.5
+                })
+        });
+        // var style = new ol.style.Style({
+        //     // fill: new ol.style.Fill({
+        //     //   color: 'rgba(0, 255, 255, 0.7)'
+        //     // }),
+        //     stroke: new ol.style.Stroke({
+        //         color: '#FFFF00',
+        //         width: 3
+        //     }),
+        //     image: new ol.style.Circle({
+        //         radius: 7,
+        //         fill: new ol.style.Fill({
+        //             color: '#FFFF00'
+        //         })
+        //     })
+        // });
+
+  
+   
 
     geojson = new ol.layer.Vector({
         source: new ol.source.Vector({
@@ -1303,17 +1353,18 @@ function loadprops(layername) {
 
 
 var highlightStyle = new ol.style.Style({
+    fill:true,
     fill: new ol.style.Fill({
-      color: 'rgba(255,0,255,0.3)',
+      color: 'rgba(167,67,255)',
     }),
     stroke: new ol.style.Stroke({
-        color: '#FF00FF',
+        color: '#FFFF00',
         width: 3,
     }),
     image: new ol.style.Circle({
         radius: 10,
         fill: new ol.style.Fill({
-            color: '#FF00FF'
+            color: '#FFFF00',
         })
     })
 });
